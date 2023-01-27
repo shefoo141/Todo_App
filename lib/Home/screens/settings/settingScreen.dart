@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:todo_app/Home/screens/settings/languageSheet.dart';
 import 'package:todo_app/Home/screens/settings/themeSheet.dart';
 import 'package:todo_app/appStyle/colors.dart';
+
+import '../../../provider/provider.dart';
 
 class settingScreen extends StatefulWidget {
 
@@ -12,6 +15,7 @@ class settingScreen extends StatefulWidget {
 class _settingScreenState extends State<settingScreen> {
   @override
   Widget build(BuildContext context) {
+    provider providerSettings = Provider.of(context);
     return Container(
       padding: EdgeInsets.all(8),
       margin: EdgeInsets.all(10),
@@ -64,7 +68,7 @@ class _settingScreenState extends State<settingScreen> {
                 margin: EdgeInsets.all(10),
                 child: Row(
                   children: [
-                    Text("light",style: Theme.of(context).textTheme.headline3,),
+                    Text(providerSettings.appThemeMode == ThemeMode.light ? "Light" : "Dark",style: Theme.of(context).textTheme.headline3,),
                     Spacer(),
                     Icon(Icons.arrow_drop_down, color: Colors.black,),
                   ],

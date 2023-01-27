@@ -80,7 +80,7 @@ class myThemes {
         subtitle2: TextStyle(fontSize:26 ,fontWeight: FontWeight.bold,color: Colors.white, ),
         subtitle1: TextStyle(fontSize:15 ,fontWeight: FontWeight.bold ,color: Colors.white),
         headline5: TextStyle(fontSize:18 ,fontWeight: FontWeight.bold ,color: Colors.white),
-        headline4: TextStyle(fontSize:16 ,fontWeight: FontWeight.normal,color: Colors.white ),
+        headline4: TextStyle(fontSize:16 ,fontWeight: FontWeight.normal,color: Colors.black ),
         bodyText1: TextStyle(fontSize:12 ,fontWeight: FontWeight.bold ,color: Colors.white),
         bodyText2: TextStyle(fontWeight: FontWeight.bold, fontSize: 14 ,color: Colors.white),
         headline3: TextStyle(fontSize:16 ,fontWeight: FontWeight.bold,color: Colors.black ),

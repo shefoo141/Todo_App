@@ -1,8 +1,19 @@
 import 'package:calendar_timeline/calendar_timeline.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_app/Home/screens/taskList/taskItem.dart';
 
-class taskScreen extends StatelessWidget {
+import '../../../dataBase/dataBase_config.dart';
+import '../../../models/taskDM.dart';
+
+class taskScreen extends StatefulWidget {
+
+  @override
+  State<taskScreen> createState() => _taskScreenState();
+}
+
+class _taskScreenState extends State<taskScreen> {
+  DateTime chosenDate = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -10,10 +21,16 @@ class taskScreen extends StatelessWidget {
      child: Column(
        children: [
          CalendarTimeline(
-           initialDate: DateTime.now(),
-           firstDate: DateTime.now(),
+           initialDate: chosenDate,
+           firstDate: DateTime.now().subtract(Duration(days: 365)),
            lastDate: DateTime.now().add(Duration(days: 365)),
-           onDateSelected: (date) => print(date),
+           onDateSelected: (date) {
+             chosenDate=date;
+             setState(() {
+
+             });
+           },
+
            leftMargin: 20,
            monthColor: Colors.blueGrey,
            dayColor: Colors.teal[200],
@@ -23,7 +40,27 @@ class taskScreen extends StatelessWidget {
            selectableDayPredicate: (date) => true,
            locale: 'en_ISO',
          ),
-         Expanded(child: ListView.builder(itemBuilder: (context, index) => taskItem())),
+         StreamBuilder<QuerySnapshot<task>>
+           ( stream: getTasks(chosenDate),
+             builder:(context, snapshot){
+             if (snapshot.connectionState== ConnectionState.waiting){
+               return Center(child: CircularProgressIndicator());
+             }
+             else if(snapshot.hasError){
+               return Center(child: Text('SomeThing Went Wrong..'));
+             }
+             else{
+               List<task>Tasks=snapshot.data?.docs.map((e) => e.data()).toList()??[];
+               return Expanded(
+                 child: ListView.separated(
+                   separatorBuilder: (context,index)=>SizedBox(height: 10,),
+                   itemCount: Tasks.length,
+                     itemBuilder:(context,index) => taskItem(Tasks[index])),
+               );
+             }
+             }
+         )
+
        ],
      ),
     );

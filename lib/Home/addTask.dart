@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/appStyle/colors.dart';
 import 'package:todo_app/appStyle/themes.dart';
+import 'package:todo_app/dataBase/dataBase_config.dart';
+import 'package:todo_app/models/taskDM.dart';
 
 class addTaskSheet extends StatefulWidget {
 
@@ -9,6 +11,8 @@ class addTaskSheet extends StatefulWidget {
 }
 
 class _addTaskSheetState extends State<addTaskSheet> {
+  var titleController = TextEditingController();
+  var descController = TextEditingController();
   DateTime selectedDate = DateTime.now();
   GlobalKey <FormState> formKey = GlobalKey<FormState>();
   GlobalKey <FormState> formKey2 = GlobalKey<FormState>();
@@ -28,7 +32,8 @@ class _addTaskSheetState extends State<addTaskSheet> {
             Form(
                 key : formKey,
                 child: TextFormField(
-              validator: (string){
+                    controller: titleController,
+               validator: (string){
                 if(string?.trim()=="" || string== null)
                   return "Please Enter Task Title";
                 else{
@@ -44,6 +49,7 @@ class _addTaskSheetState extends State<addTaskSheet> {
             Form(
                 key : formKey2,
                 child: TextFormField(
+                    controller: descController,
                 validator: (string2){
                   if(string2?.trim()=="" || string2== null)
                     return "Please Enter Task Description";
@@ -51,14 +57,14 @@ class _addTaskSheetState extends State<addTaskSheet> {
                     return null;
                   }
                 },
-              maxLines: 4,
+              maxLines: 3,
               decoration: InputDecoration(
                 label: Text('Enter Task Description'
               ,style: Theme.of(context).textTheme.bodyText1,
               ),
             ))),
             SizedBox(height: 30,),
-            Text('Select Time' , style: Theme.of(context).textTheme.headline4),
+            Text('Select Time' , style: Theme.of(context).textTheme.bodyText1),
             SizedBox(height: 10,),
             GestureDetector(
               onTap: (){
@@ -70,6 +76,11 @@ class _addTaskSheetState extends State<addTaskSheet> {
             SizedBox(height: 30,),
             ElevatedButton(onPressed: (){
               if(formKey.currentState!.validate() || formKey2.currentState!.validate());
+              task Task = task(title:titleController.text ,
+                  description: descController.text,
+                  date: DateUtils.dateOnly(selectedDate).millisecondsSinceEpoch);
+               addTask(Task);
+               Navigator.pop(context);
             }, child: Text('add task'))
           ],
         ),
@@ -81,8 +92,8 @@ class _addTaskSheetState extends State<addTaskSheet> {
    DateTime ? Date= await showDatePicker(
         context: context,
         initialDate:selectedDate,
-        firstDate: DateTime.now(),
-        lastDate: DateTime.now().add(Duration(days: 365*10000000)),
+        firstDate: DateTime.now().subtract(Duration(days: 365)),
+        lastDate: DateTime.now().add(Duration(days: 365)),
     );
    if(Date == null) return;
    selectedDate= Date;
